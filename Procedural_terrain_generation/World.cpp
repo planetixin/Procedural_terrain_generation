@@ -5,6 +5,7 @@ World::World()
 {
 
 	chunksVisibleInViewDst = round(MaxViewDst / chunkSize +1)+10;
+
 }
 
 World::~World()
@@ -17,6 +18,7 @@ void World::Update(float fElapsedTime, Chunk::Vec2 _CameraCoords)
 {
 	
 	CameraPos = _CameraCoords;
+
 
 	int currentChunkCoordX = (CameraPos.x / chunkSize);
 	int currentChunkCoordY = (CameraPos.y / chunkSize);
@@ -70,7 +72,7 @@ int World::GetTile(int x, int y)
 		return a.GetTile((int)((x - ChunkCoordX * chunkSize)), (int)(y - (ChunkCoordY * chunkSize)));
 	}
 
-	return 2;
+	return 0;
 }
 
 void World::SetTile(int x, int y)

@@ -139,9 +139,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Chunk.cpp" />
+    <ClCompile Include="Chunk.cpp">
+      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
+    </ClCompile>
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Assets.cpp" />
+    <ClCompile Include="perlin_noise.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -149,6 +154,7 @@
     <ClInclude Include="olcPixelGameEngine.h" />
     <ClInclude Include="Assets.h" />
     <ClInclude Include="PerlinNoise.hpp" />
+    <ClInclude Include="perlin_noise.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

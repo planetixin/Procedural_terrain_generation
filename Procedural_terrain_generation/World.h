@@ -5,6 +5,7 @@ using namespace std;
 #include "olcPixelGameEngine.h"
 #include <map>
 #include "Chunk.h"
+//#include "PerlinNoise.hpp"
 
 class World
 {
@@ -25,10 +26,8 @@ private:
 	map<Chunk::Vec2, Chunk*> Chunks;
 	map<float,int> stringMap;
 
-
-
 	int chunksVisibleInViewDst;
-	const float MaxViewDst = 10;
+	const float MaxViewDst = 20;
 	const int chunkSize = 4;
 };
 
