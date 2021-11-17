@@ -1,7 +1,6 @@
 #include "Chunk.h"
-#include "perlin_noise.h"
 
-Chunk::Chunk(Vec2 coord, int _size)
+Chunk::Chunk(Vec2 coord, int _size, OpenSimplexNoise::Noise noise)
 {
 	size = _size;
 	Pos.x = coord.x;
@@ -15,11 +14,16 @@ Chunk::Chunk(Vec2 coord, int _size)
 	{
 		for (int y = 0; y < size; y++)
 		{
-			Vec2 tilesPos;
-			tilesPos.x = (Pos.x*size + x)* 0.15431;
-			tilesPos.y = (Pos.y*size + y)* 0.15431;
-			int myNoise = (int)(perlin_noise::Perlin2D(tilesPos, 1)) + 1;
-			cout << myNoise << " ";
+			Vec2 tilePos;
+			tilePos.x = (Pos.x * size + x);
+			tilePos.y = (Pos.y * size + y);
+			//float myNoise = perlin_noise::Perlin2D(tilePos, 0.15431);
+			float myNoise = noise.eval(tilePos.x* 0.13431, tilePos.y * 0.13431)*10+10;
+
+			if (myNoise > 1.0f || myNoise < -1.0f)
+			{
+				//cout << myNoise << ": " << tilePos.x << ", " << tilePos.y << endl;
+			}
 
 			//int value = siv::PerlinNoise().noise2D(x, y);
 
@@ -79,15 +83,13 @@ int Chunk::GetTile(int x, int y)
 	return (int)tiles[x + (y*size)];
 }
 
-bool Chunk::SetTile(int x, int y)
+bool Chunk::SetTile(int x, int y, int tile)
 {
-	Pos.x = x;
-	Pos.y = y;
+	tiles[x+ (y*size)] = tile;
 	return true;
 }
-bool Chunk::SetTile(Vec2 pos)
+bool Chunk::SetTile(Vec2 pos, int tile)
 {
-	Pos.x = pos.x;
-	Pos.y = pos.y;
+	SetTile(pos.x, pos.y, tile);
 	return true;
 }

@@ -4,7 +4,7 @@
 #include <GenericUsbFnIoctl.h>
 #include <stdlib.h>
 #include <time.h>
-
+#include "OpenSimplexNoise.h"
 
 class Chunk
 {	
@@ -25,13 +25,11 @@ public:
 		{
 			return (this->x == c.x && this->y == c.y);
 		}
-		/*Vec2 operator = (const Vec2& c) const
+		void operator = (const Vec2& c)
 		{
-			Vec2 result;
-			result.x = c.x;
-			result.y = c.y;
-			return result;
-		}*/
+			x = c.x;
+			y = c.y;
+		}
 		Vec2 operator * (const Vec2& c) const
 		{
 			Vec2 result;
@@ -46,12 +44,10 @@ public:
 			result.y = result.y / c.y;
 			return result;
 		}
-		Vec2 operator *= (const Vec2& c) const
+		void operator *= (const Vec2& c)
 		{
-			Vec2 result;
-			result.x *= c.x;
-			result.y *= c.y;
-			return result;
+			x *= c.x;
+			y *= c.y;
 		}
 		Vec2 operator * (const float& c) const
 		{
@@ -67,21 +63,17 @@ public:
 			result.y = result.y / c;
 			return result;
 		}
-		Vec2 operator *= (const float& c) const
+		void operator *= (const float& c)
 		{
-			Vec2 result;
-			result.x *= c;
-			result.y *= c;
-			return result;
+			x *= c;
+			y *= c;
 		}
 		
 	};
 
-	
-
 	int* tiles = nullptr;
 
-	Chunk(Vec2 coord, int _size);
+	Chunk(Vec2 coord, int _size, OpenSimplexNoise::Noise noise);
 	~Chunk();
 
 	void DrawSelf(olc::PixelGameEngine gfx);
@@ -89,8 +81,8 @@ public:
 	//void PerlinNoise2D(int X1, int Y1, int nWidth, int nHeight, float* fSeed, int nOctaves, float fBias, float* fOutput);
 
 	int GetTile(int x, int y);
-	bool SetTile(int x, int y);
-	bool SetTile(Vec2 pos);
+	bool SetTile(int x, int y, int tile);
+	bool SetTile(Vec2 pos, int tile);
 
 private:
 	Vec2 Pos;

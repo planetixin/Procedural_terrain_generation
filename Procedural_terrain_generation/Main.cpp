@@ -21,14 +21,13 @@ private:
     Chunk::Vec2 CamPos;
     World world;
     float speed = 8.0f;
+    int putTile = 1;
     olc::Sprite* tiles;
 
 protected:
 
     bool OnUserCreate() override
     {
-        srand(time(NULL));
-
         Assets::get().loadSprites();
         tiles = Assets::get().GetSprite("tiles");
 
@@ -57,42 +56,43 @@ protected:
             {
                 CamPos.x += -speed * fElapsedTime;
             }
+            if (GetKey(olc::Key::NP_ADD).bPressed)
+            {
+                putTile += 1;
+            }
+            if (GetKey(olc::Key::NP_SUB).bPressed)
+            {
+                putTile -= 1;
+            }
+            if (GetKey(olc::O).bPressed)
+            {
+                std::cout << world.CheckSeed() << std::endl;
+            }
             //cout << CamPos.x << " " << CamPos.y << endl;
         }
         
         
 
-        float nTileWidth = 16;
-        float nTileHeight = 16;
+        float tileSize = 16;
 
         Chunk::Vec2 TileCamPos = {(int)CamPos.x, (int)CamPos.y};
 
-        world.Update(fElapsedTime, TileCamPos);
+        world.Update(fElapsedTime, CamPos);
+        
 
-        int nVisibleTilesX = ScreenWidth() / nTileWidth;
-        int nVisibleTilesY = ScreenHeight() / nTileHeight;
-
-        float fOffsetX = CamPos.x - (float)nVisibleTilesX/2;
-        float fOffsetY = CamPos.y - (float)nVisibleTilesY/2;
-
-
-
-        float fTileOffsetX = (fOffsetX - round(fOffsetX)) * nTileWidth;
-        float fTileOffsetY = (fOffsetY - round(fOffsetY)) * nTileHeight;
-
-        for (int x = -1; x < nVisibleTilesX+2; x++)
+        if (GetMouse(0).bPressed)
         {
-            for (int y = -1; y < nVisibleTilesY+2; y++)
-            {
-                int idx = world.GetTile(x + round(fOffsetX), y + round(fOffsetY));
-                int sx = (idx-1) % 10;
-                int sy = (idx-1) / 10;
-                if (idx != 0)
-                {
-                    DrawPartialSprite(x * nTileWidth - fTileOffsetX, y * nTileHeight - fTileOffsetY, tiles, sx * nTileWidth, sy * nTileHeight, nTileWidth, nTileHeight);
-                }
-            }
+            int pressedX = round((GetMouseX() - (ScreenWidth() / 2.0f)) / tileSize + CamPos.x);
+            int pressedY = round((GetMouseY() - (ScreenHeight() / 2.0f)) / tileSize + CamPos.y);
+
+
+            world.SetTile(pressedX, pressedY, putTile);
+
+            std::cout <<  pressedX << " " << pressedY << std::endl;
         }
+        world.DrawSelf(this, tiles, tileSize);
+
+        
 
         return true;
     }
@@ -102,8 +102,9 @@ protected:
 
 int main()
 {
+    srand(time(NULL));
     Game demo;
-    if (demo.Construct(700, 400, 2, 2, false, false))
+    if (demo.Construct(400, 300, 3, 3, false, true))
         demo.Start();
     return 0;
 }
